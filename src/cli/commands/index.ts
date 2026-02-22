@@ -131,12 +131,22 @@ export function createModelCommands(program: Command): void {
       console.log('');
 
       const models = [
+        // Anthropic (Latest)
+        { id: 'claude-opus-4-6', provider: 'anthropic', context: '200K' },
+        { id: 'claude-sonnet-4-5-20250929', provider: 'anthropic', context: '200K' },
+        { id: 'claude-haiku-4-5-20251001', provider: 'anthropic', context: '200K' },
+        // Anthropic (Legacy)
         { id: 'claude-3-5-sonnet-20241022', provider: 'anthropic', context: '200K' },
         { id: 'claude-3-opus-20240229', provider: 'anthropic', context: '200K' },
         { id: 'claude-3-5-haiku-20241022', provider: 'anthropic', context: '200K' },
+        // OpenAI
         { id: 'gpt-4o', provider: 'openai', context: '128K' },
         { id: 'gpt-4-turbo', provider: 'openai', context: '128K' },
         { id: 'gpt-3.5-turbo', provider: 'openai', context: '16K' },
+        // Google Gemini
+        { id: 'gemini-2.0-flash', provider: 'gemini', context: '1M' },
+        { id: 'gemini-1.5-pro', provider: 'gemini', context: '2M' },
+        // Local/Other
         { id: 'llama3', provider: 'ollama', context: '8K' },
       ];
 
