@@ -61,6 +61,7 @@ export interface GatewayServer {
   setEmbeddingsRouter(router: Router | null): void;
   setCronRouter(router: Router | null): void;
   setLaunchRouter(router: Router | null): void;
+  setCryptoSwingRouter(router: Router | null): void;
   setCommandListHandler(handler: CommandListHandler | null): void;
   setHooksHandler(handler: HooksHandler | null): void;
   setOnSessionDelete(handler: ((key: string) => void) | null): void;
@@ -2819,6 +2820,11 @@ export function createServer(
     setLaunchRouter(router: Router | null): void {
       if (router) {
         app.use('/api/launch', requireAuth, router);
+      }
+    },
+    setCryptoSwingRouter(router: Router | null): void {
+      if (router) {
+        app.use('/api/crypto-swing', requireAuth, router);
       }
     },
     setCommandListHandler(handler: CommandListHandler | null): void {

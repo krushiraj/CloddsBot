@@ -42,6 +42,8 @@ import { kalshiHandlers } from './kalshi';
 import { agentbetsHandlers } from './agentbets';
 import { bittensorHandlers } from './bittensor';
 export { setBittensorService } from './bittensor';
+import { cryptoSwingHandlers } from './crypto-swing';
+export { setSwingEngine } from './crypto-swing';
 
 /**
  * All handlers aggregated from platform modules
@@ -67,6 +69,7 @@ const allHandlers: HandlersMap = {
   ...kalshiHandlers,
   ...agentbetsHandlers,
   ...bittensorHandlers,
+  ...cryptoSwingHandlers,
 };
 
 /**

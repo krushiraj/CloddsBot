@@ -1287,6 +1287,32 @@ export interface Config {
       enabled?: boolean;
       [key: string]: unknown;
     };
+    /** Crypto swing trading config */
+    cryptoSwing?: {
+      enabled?: boolean;
+      mode?: 'paper' | 'live';
+      autoStart?: boolean;
+      initialCapital?: number;
+      symbols?: Array<'ETH' | 'SOL' | 'PEPE'>;
+      maxPositionSizeUsd?: number;
+      maxPositionPct?: number;
+      maxOpenPositions?: number;
+      ohlcvInterval?: string;
+      evalIntervalMs?: number;
+      emaFast?: number;
+      emaSlow?: number;
+      rsiPeriod?: number;
+      rsiOverbought?: number;
+      rsiOversold?: number;
+      stopLossAtrMultiplier?: number;
+      takeProfitRatio?: number;
+      trailingStopEnabled?: boolean;
+      slippageBps?: number;
+      feeBps?: number;
+      binance?: { apiKey: string; apiSecret: string };
+      hyperliquid?: { walletAddress: string; privateKey: string };
+      [key: string]: unknown;
+    };
   };
   /** Futures/perpetuals trading configuration */
   futures?: {

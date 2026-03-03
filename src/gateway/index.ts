@@ -2462,6 +2462,46 @@ export async function createGateway(config: Config): Promise<AppGateway> {
     }
   }
 
+  // Register crypto swing trading adapter if configured
+  if (config.trading?.cryptoSwing?.enabled) {
+    try {
+      const { createCryptoFeed } = await import('../feeds/crypto/index.js');
+      const { createCryptoSwingAdapter } = await import('../strategies/crypto-swing/index.js');
+      const { setSwingEngine } = await import('../agents/handlers/index.js');
+      const { createCryptoSwingRouter } = await import('./crypto-swing-routes.js');
+      const swingFeed = createCryptoFeed();
+      const swingAdapter = createCryptoSwingAdapter({
+        feed: swingFeed,
+        db,
+        config: config.trading.cryptoSwing as any,
+      });
+      botManager.registerStrategy(swingAdapter);
+
+      if (config.trading.cryptoSwing.autoStart !== false) {
+        // Provide a minimal strategy context — engine doesn't use it
+        const swingCtx = {
+          portfolioValue: 0,
+          availableBalance: 0,
+          positions: new Map(),
+          recentTrades: [],
+          markets: new Map(),
+          priceHistory: new Map(),
+          timestamp: new Date(),
+          isBacktest: false,
+        };
+        if (swingAdapter.init) await swingAdapter.init(swingCtx as any);
+        const swingEngine = swingAdapter.getEngine();
+        if (swingEngine) {
+          setSwingEngine(swingEngine);
+          httpGateway.setCryptoSwingRouter(createCryptoSwingRouter({ engine: swingEngine }));
+        }
+      }
+      logger.info({ mode: config.trading.cryptoSwing.mode ?? 'paper' }, 'Crypto swing trading adapter registered');
+    } catch (err) {
+      logger.warn({ err }, 'Failed to load crypto swing adapter');
+    }
+  }
+
   logger.info({ strategies: botManager.getStrategies().length }, 'Bot manager initialized with built-in strategies');
 
   // Wire trading API endpoints (positions, portfolio, orders, signals, orchestrator)
