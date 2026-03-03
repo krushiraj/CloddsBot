@@ -184,6 +184,28 @@ const DEFAULT_CONFIG: Config = {
     maxOrderSize: 100,
     maxDailyLoss: 200,
     stopLossCooldownMs: 10 * 60 * 1000,
+    cryptoSwing: {
+      enabled: false,
+      mode: 'paper',
+      autoStart: true,
+      initialCapital: 10000,
+      symbols: ['ETH', 'SOL', 'PEPE'],
+      maxPositionSizeUsd: 500,
+      maxPositionPct: 0.1,
+      maxOpenPositions: 3,
+      ohlcvInterval: '4h',
+      evalIntervalMs: 900_000,
+      emaFast: 9,
+      emaSlow: 21,
+      rsiPeriod: 14,
+      rsiOverbought: 65,
+      rsiOversold: 35,
+      stopLossAtrMultiplier: 1.5,
+      takeProfitRatio: 2,
+      trailingStopEnabled: true,
+      slippageBps: 10,
+      feeBps: 10,
+    },
   },
   arbitrageExecution: {
     enabled: false,
@@ -428,6 +450,18 @@ export async function loadConfig(customPath?: string): Promise<Config> {
       ...config.trading.hftDivergence,
       enabled: envBool(process.env.HFT_DIVERGENCE_ENABLED),
     };
+  }
+  if (process.env.CRYPTO_SWING_ENABLED) {
+    if (!config.trading) config.trading = { enabled: false, dryRun: true, maxOrderSize: 100, maxDailyLoss: 200 };
+    config.trading.cryptoSwing = {
+      ...config.trading.cryptoSwing,
+      enabled: envBool(process.env.CRYPTO_SWING_ENABLED),
+    };
+  }
+  if (process.env.CRYPTO_SWING_MODE) {
+    if (!config.trading) config.trading = { enabled: false, dryRun: true, maxOrderSize: 100, maxDailyLoss: 200 };
+    if (!config.trading.cryptoSwing) config.trading.cryptoSwing = { enabled: false };
+    config.trading.cryptoSwing.mode = process.env.CRYPTO_SWING_MODE as 'paper' | 'live';
   }
 
   // Apply Percolator env var overrides
